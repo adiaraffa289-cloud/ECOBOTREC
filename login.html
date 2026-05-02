@@ -127,70 +127,62 @@
         { name: "Bu Dwi", nisn: "Guru", uid: "E197366A" }
     ];
     
+    // Jika sudah login, langsung redirect
+    window.addEventListener('load', function() {
+        const sess = sessionStorage.getItem('ecobottle_logged_in');
+        const saved = localStorage.getItem('ecobottle_user');
+        if (sess && saved) {
+            window.location.replace('index.html');
+            return;
+        }
+        if (saved) {
+            try {
+                const userData = JSON.parse(saved);
+                document.getElementById('username').value = userData.name || '';
+                document.getElementById('remember').checked = true;
+            } catch(e) {}
+        }
+    });
+
     // Event listener untuk form login
     document.getElementById('loginForm').addEventListener('submit', function(e) {
-        e.preventDefault(); // Mencegah form submit default
+        e.preventDefault();
         
         const inputName = document.getElementById('username').value.trim();
         const inputNisn = document.getElementById('nisn').value.trim();
         
-        // Cari user yang cocok
         const user = validUsers.find(u => 
             u.name.toLowerCase() === inputName.toLowerCase() && 
             u.nisn === inputNisn
         );
         
         if (user) {
-            // Login berhasil
             showNotification('Login berhasil! Selamat datang, ' + user.name, 'success');
-
-            // Tandai user sudah login untuk sesi ini (dipakai index.html sebagai penjaga)
             sessionStorage.setItem('ecobottle_logged_in', 'true');
-
-            // Simpan data user ke localStorage jika "Ingat saya" dicentang
-            if (document.getElementById('remember').checked) {
-                localStorage.setItem('ecobottle_user', JSON.stringify({
-                    name: user.name,
-                    uid: user.uid,
-                    loginTime: new Date().toISOString()
-                }));
+            // Selalu simpan user ke localStorage agar halaman lain bisa baca
+            localStorage.setItem('ecobottle_user', JSON.stringify({
+                name: user.name,
+                uid: user.uid,
+                nisn: user.nisn,
+                loginTime: new Date().toISOString()
+            }));
+            if (!document.getElementById('remember').checked) {
+                sessionStorage.setItem('ecobottle_no_remember', 'true');
             }
-            
-            // Redirect ke halaman utama setelah 1 detik
-            setTimeout(() => {
-                window.location.href = 'index.html'; // Ganti dengan halaman tujuan Anda
-            }, 1000);
-            
+            setTimeout(() => { window.location.href = 'index.html'; }, 1000);
         } else {
-            // Login gagal
             showNotification('Nama atau NISN salah! Silakan coba lagi.', 'error');
         }
     });
     
-    // Fungsi untuk menampilkan notifikasi
     function showNotification(message, type) {
         const container = document.querySelector('.notification-container');
         const notification = document.createElement('div');
         notification.className = `notification ${type}`;
         notification.textContent = message;
-        
         container.appendChild(notification);
-        
-        // Hapus notifikasi setelah 3 detik
-        setTimeout(() => {
-            notification.remove();
-        }, 3000);
+        setTimeout(() => { notification.remove(); }, 3000);
     }
-    
-    // Cek apakah user sudah login sebelumnya (remember me)
-    window.addEventListener('load', function() {
-        const savedUser = localStorage.getItem('ecobottle_user');
-        if (savedUser) {
-            const userData = JSON.parse(savedUser);
-            document.getElementById('username').value = userData.name;
-            document.getElementById('remember').checked = true;
-        }
-    });
     </script>
 
 </body>

@@ -3,7 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>Voucher - EcoBOTREC</title>
+    <title>Voucher - EcoBotRec</title>
+    <script>
+    (function() {
+        var sess = sessionStorage.getItem('ecobottle_logged_in');
+        var saved = localStorage.getItem('ecobottle_user');
+        if (!sess && !saved) {
+            window.location.replace('login.html');
+        } else if (!sess && saved) {
+            sessionStorage.setItem('ecobottle_logged_in', 'true');
+        }
+    })();
+    </script>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
@@ -192,80 +203,6 @@
             .ecob-footer-content { grid-template-columns: 1fr; gap: 40px; }
             .ecob-footer-bottom { flex-direction: column; text-align: center; }
         }
-        /* ===== LOGIN OVERLAY ===== */
-        .login-overlay {
-            position: fixed;
-            inset: 0;
-            background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 50%, #bbf7d0 100%);
-            z-index: 9999;
-            overflow-y: auto;
-        }
-        .ecob-login-container {
-            min-height: 100vh;
-            display: flex;
-            align-items: stretch;
-        }
-        .ecob-login-box {
-            flex: 0 0 480px;
-            max-width: 480px;
-            background: white;
-            padding: 60px 50px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            box-shadow: 4px 0 40px rgba(0,0,0,0.08);
-        }
-        .ecob-login-header { text-align: center; margin-bottom: 40px; }
-        .ecob-login-title { font-size: 2rem; font-weight: 800; color: #15803d; margin-bottom: 8px; }
-        .ecob-login-subtitle { color: #64748b; font-size: 0.95rem; }
-        .ecob-form-group { margin-bottom: 20px; }
-        .ecob-form-group label { display: block; font-weight: 600; color: #334155; margin-bottom: 8px; font-size: 0.9rem; }
-        .ecob-input-wrapper {
-            display: flex; align-items: center; gap: 12px;
-            background: #f8fafc; border: 2px solid #e2e8f0;
-            border-radius: 14px; padding: 14px 18px;
-            transition: border-color 0.3s;
-        }
-        .ecob-input-wrapper:focus-within { border-color: #22c55e; background: #f0fdf4; }
-        .ecob-input-wrapper input {
-            flex: 1; border: none; background: transparent;
-            font-size: 0.95rem; font-family: 'Poppins', sans-serif;
-            color: #1a1a2e; outline: none;
-        }
-        .ecob-login-btn {
-            width: 100%; padding: 16px; border: none; cursor: pointer;
-            background: linear-gradient(135deg, #22c55e, #15803d);
-            color: white; border-radius: 14px; font-size: 1rem;
-            font-weight: 600; display: flex; align-items: center; justify-content: center; gap: 10px;
-            box-shadow: 0 8px 20px rgba(34,197,94,0.3);
-            transition: all 0.3s; margin-top: 10px;
-        }
-        .ecob-login-btn:hover { transform: translateY(-2px); box-shadow: 0 12px 28px rgba(34,197,94,0.4); }
-        .ecob-login-error { color: #ef4444; font-size: 0.85rem; margin-top: 10px; text-align: center; min-height: 20px; }
-        .ecob-login-divider { text-align: center; margin: 24px 0 16px; position: relative; }
-        .ecob-login-divider::before { content: ''; position: absolute; top: 50%; left: 0; right: 0; height: 1px; background: #e2e8f0; }
-        .ecob-login-divider span { background: white; padding: 0 16px; color: #94a3b8; font-size: 0.85rem; position: relative; }
-        .ecob-demo-title { font-size: 0.85rem; color: #64748b; margin-bottom: 10px; font-weight: 600; }
-        .ecob-demo-list { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-        .ecob-demo-btn {
-            padding: 10px 14px; border: 2px solid #e2e8f0; background: #f8fafc;
-            border-radius: 12px; cursor: pointer; text-align: left;
-            transition: all 0.25s;
-        }
-        .ecob-demo-btn:hover { border-color: #22c55e; background: #f0fdf4; }
-        .ecob-demo-name { display: block; font-weight: 600; font-size: 0.85rem; color: #334155; }
-        .ecob-demo-nisn { display: block; font-size: 0.75rem; color: #94a3b8; margin-top: 2px; }
-        .ecob-login-illustration {
-            flex: 1;
-            background: linear-gradient(135deg, #166534 0%, #15803d 50%, #22c55e 100%);
-            display: flex; align-items: center; justify-content: center;
-            padding: 60px 50px; color: white;
-        }
-        @media (max-width: 768px) {
-            .ecob-login-container { flex-direction: column; }
-            .ecob-login-box { flex: none; max-width: 100%; padding: 40px 24px; }
-            .ecob-login-illustration { display: none; }
-        }
         /* ===== VOUCHER PAGE STYLES ===== */
         .page-header { padding: 120px 0 30px; text-align: center; }
         .page-title { font-size: 2.5rem; font-weight: 800; background: linear-gradient(135deg, #166534, #22c55e); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 12px; }
@@ -359,7 +296,7 @@
         <div class="ecob-header-content">
             <a href="index.html" class="ecob-logo">
                 <svg width="38" height="38" viewBox="0 0 60 60" fill="none"><rect width="60" height="60" rx="14" fill="#22c55e"/><path d="M30 8L36 18H24L30 8Z" fill="white"/><rect x="21" y="18" width="18" height="28" rx="3" fill="white" opacity="0.9"/><path d="M26 22H34V27H26V22Z" fill="#22c55e" opacity="0.5"/><circle cx="30" cy="34" r="3" fill="#22c55e" opacity="0.7"/></svg>
-                <span>EcoBOTREC</span>
+                <span>EcoBotRec</span>
             </a>
             <nav class="ecob-nav">
                 <a href="index.html" class="ecob-nav-link">Beranda</a>
@@ -386,30 +323,8 @@
     </div>
 </div>
 
-<!-- LOGIN OVERLAY -->
-<div id="loginOverlay" class="login-overlay" style="display:none;">
-    <div class="ecob-login-container">
-        <div class="ecob-login-box">
-            <div class="ecob-login-header">
-                <div class="ecob-login-logo-wrap"><svg width="60" height="60" viewBox="0 0 60 60" fill="none"><rect width="60" height="60" rx="16" fill="#22c55e"/><path d="M30 8L36 18H24L30 8Z" fill="white"/><rect x="21" y="18" width="18" height="28" rx="3" fill="white" opacity="0.9"/><path d="M26 22H34V27H26V22Z" fill="#22c55e" opacity="0.5"/><circle cx="30" cy="34" r="3" fill="#22c55e" opacity="0.7"/></svg></div>
-                <h1 class="ecob-login-title">EcoBOTREC</h1>
-                <p class="ecob-login-subtitle">Login untuk menukar voucher</p>
-            </div>
-            <div class="ecob-login-form">
-                <div class="ecob-form-group"><label>Nama Pengguna</label><div class="ecob-input-wrapper"><input type="text" id="loginName" placeholder="Masukkan nama Anda"></div></div>
-                <div class="ecob-form-group"><label>NISN / UID</label><div class="ecob-input-wrapper"><input type="text" id="loginNisn" placeholder="Masukkan NISN atau UID"></div></div>
-                <button class="ecob-login-btn" id="loginBtn">Masuk</button>
-                <div id="loginError" class="ecob-login-error"></div>
-                <div class="ecob-login-divider"><span>atau</span></div>
-                <div class="ecob-demo-accounts"><p class="ecob-demo-title">Akun Demo:</p><div class="ecob-demo-list" id="demoList"></div></div>
-            </div>
-        </div>
-        <div class="ecob-login-illustration"><div class="ecob-illustration-content"><h2>Bergabunglah dengan EcoBOTREC!</h2><p>Tukarkan poinmu dengan voucher menarik</p></div></div>
-    </div>
-</div>
-
 <!-- MAIN VOUCHER CONTENT -->
-<main id="mainContent" style="display:none;">
+<main id="mainContent">
     <div class="container">
         <div class="page-header"><h1 class="page-title">Tukar Voucher</h1><p class="page-subtitle">Kumpulkan poin dari botol plastik dan tukarkan dengan voucher</p></div>
         <div class="user-points-card"><div class="points-info"><span class="points-label">Total Poin Anda (1 botol = 5 poin):</span><span class="points-value" id="userPoints">0</span></div></div>
@@ -444,11 +359,11 @@
 <footer class="ecob-footer">
     <div class="container">
         <div class="ecob-footer-content">
-            <div><div class="ecob-footer-logo"><svg width="38" height="38" viewBox="0 0 60 60" fill="none"><rect width="60" height="60" rx="14" fill="#22c55e"/><path d="M30 8L36 18H24L30 8Z" fill="white"/><rect x="21" y="18" width="18" height="28" rx="3" fill="white" opacity="0.9"/><path d="M26 22H34V27H26V22Z" fill="#22c55e" opacity="0.5"/><circle cx="30" cy="34" r="3" fill="#22c55e" opacity="0.7"/></svg><span>EcoBOTREC</span></div><p class="ecob-footer-desc">Website ecoBOTREC: Penukaran botol plastik anda menjadi sesuatu yang lebih berharga.</p></div>
+            <div><div class="ecob-footer-logo"><svg width="38" height="38" viewBox="0 0 60 60" fill="none"><rect width="60" height="60" rx="14" fill="#22c55e"/><path d="M30 8L36 18H24L30 8Z" fill="white"/><rect x="21" y="18" width="18" height="28" rx="3" fill="white" opacity="0.9"/><path d="M26 22H34V27H26V22Z" fill="#22c55e" opacity="0.5"/><circle cx="30" cy="34" r="3" fill="#22c55e" opacity="0.7"/></svg><span>EcoBotRec</span></div><p class="ecob-footer-desc">Website ecoBOTREC: Penukaran botol plastik anda menjadi sesuatu yang lebih berharga.</p></div>
             <div><h3 class="ecob-footer-title">Navigasi</h3><ul class="ecob-footer-links"><li><a href="index.html">Beranda</a></li><li><a href="about.html">Tentang Kami</a></li><li><a href="leaderboard.html">Leaderboard</a></li><li><a href="EBOOK.html">Koleksi Ebook</a></li><li><a href="voucher.html">Voucher</a></li><li><a href="account.html">Akun Saya</a></li></ul></div>
             <div><h3 class="ecob-footer-title">Kontak</h3><ul class="ecob-footer-contact"><li>📧 info@ecobotrec.id</li><li>📞 +62 812-3456-7890</li><li>📍 Gombong, Jawa Tengah</li></ul></div>
         </div>
-        <div class="ecob-footer-bottom"><p>&copy; 2026 EcoBOTREC. Menjaga Bumi Lebih Hijau.</p></div>
+        <div class="ecob-footer-bottom"><p>&copy; 2026 EcoBotRec. Menjaga Bumi Lebih Hijau.</p></div>
     </div>
 </footer>
 
@@ -484,34 +399,9 @@
         setTimeout(() => div.remove(), 4000);
     }
 
-    function renderDemoAccounts() {
-        const container = document.getElementById('demoList');
-        if(!container) return;
-        container.innerHTML = validUsers.map(u => `<button class="ecob-demo-btn" data-name="${u.name}" data-nisn="${u.nisn}"><span class="ecob-demo-name">${u.name}</span><span class="ecob-demo-nisn">${u.nisn}</span></button>`).join('');
-        document.querySelectorAll('.ecob-demo-btn').forEach(btn => {
-            btn.addEventListener('click', () => {
-                document.getElementById('loginName').value = btn.getAttribute('data-name');
-                document.getElementById('loginNisn').value = btn.getAttribute('data-nisn');
-                handleLogin();
-            });
-        });
-    }
-
-    function handleLogin() {
-        const name = document.getElementById('loginName').value.trim();
-        const nisn = document.getElementById('loginNisn').value.trim();
-        const user = validUsers.find(u => u.name.toLowerCase() === name.toLowerCase() && (u.nisn === nisn || u.uid === nisn));
-        if(user) {
-            localStorage.setItem('ecobottle_user', JSON.stringify({ name: user.name, uid: user.uid }));
-            currentUser = user;
-            document.getElementById('loginOverlay').style.display = 'none';
-            document.getElementById('mainContent').style.display = 'block';
-            loadUserData();
-            renderVouchers();
-        } else {
-            document.getElementById('loginError').innerText = 'Nama atau NISN/UID tidak valid.';
-        }
-    }
+    // Login ditangani oleh login.html - fungsi-fungsi ini tidak lagi digunakan
+    function renderDemoAccounts() {}
+    function handleLogin() {}
 
     function loadUserData() {
         if(!currentUser) return;
@@ -574,21 +464,15 @@
                 const u = validUsers.find(uu => uu.name === name && uu.uid === uid);
                 if(u) {
                     currentUser = u;
-                    document.getElementById('loginOverlay').style.display = 'none';
-                    document.getElementById('mainContent').style.display = 'block';
                     loadUserData();
                     renderVouchers();
                     return;
                 }
             } catch(e) {}
         }
-        document.getElementById('loginOverlay').style.display = 'flex';
-        renderDemoAccounts();
+        // Jika data user tidak valid, redirect login
+        window.location.replace('login.html');
     }
-
-    document.getElementById('loginBtn').addEventListener('click', handleLogin);
-    document.getElementById('loginName').addEventListener('keypress', e => { if(e.key==='Enter') handleLogin(); });
-    document.getElementById('loginNisn').addEventListener('keypress', e => { if(e.key==='Enter') handleLogin(); });
 
     // Mobile menu
     (function() {
